@@ -1,0 +1,16 @@
+---
+# FTP Configuration
+ftp_mount_size: "5GB"
+ftp_mount_point: "/ftp/publish"
+ftp_admin_user: "ftpadmin"
+device_name: "/dev/vdb"
+
+# Service configuration
+ftp_port: 21
+pasv_min_port: 30000
+pasv_max_port: 30100
+
+# Backup configuration
+backup_enabled: true
+backup_path: "/backup/ftp"
+backup_retention_days: 7

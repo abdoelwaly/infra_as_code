@@ -1,0 +1,46 @@
+# Basic FTP configuration
+anonymous_enable=YES
+local_enable=YES
+write_enable=YES
+local_umask=022
+anon_upload_enable=NO
+anon_mkdir_write_enable=NO
+anon_other_write_enable=NO
+
+# Directory configuration
+local_root={{ ftp_mount_point }}
+anon_root={{ ftp_mount_point }}
+dirmessage_enable=YES
+xferlog_enable=YES
+xferlog_std_format=YES
+
+# Security settings
+chroot_local_user=YES
+allow_writeable_chroot=YES
+ssl_enable=YES
+rsa_cert_file=/etc/vsftpd/ssl/vsftpd.crt
+rsa_private_key_file=/etc/vsftpd/ssl/vsftpd.key
+ssl_ciphers=HIGH
+require_ssl_reuse=NO
+ssl_request_cert=NO
+
+# Passive mode configuration
+pasv_enable=YES
+pasv_min_port={{ pasv_min_port }}
+pasv_max_port={{ pasv_max_port }}
+
+# System settings
+listen=YES
+listen_port={{ ftp_port }}
+connect_from_port_20=YES
+pam_service_name=vsftpd
+userlist_enable=YES
+userlist_file=/etc/vsftpd/user_list
+userlist_deny=NO
+tcp_wrappers=YES
+
+# Performance tuning
+idle_session_timeout=600
+data_connection_timeout=300
+accept_timeout=60
+connect_timeout=60

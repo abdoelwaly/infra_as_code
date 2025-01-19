@@ -1,0 +1,28 @@
+---
+- name: Configure FTP Servers
+  hosts: ftp_servers
+  become: yes
+  vars_files:
+    - vars/main.yml
+    - vars/secrets.yml  # Encrypted file for sensitive data
+
+  pre_tasks:
+    - name: Update package cache
+      dnf:
+        update_cache: yes
+
+  tasks:
+    - name: Include package installation tasks
+      include_tasks: tasks/install_packages.yml
+
+    - name: Include user management tasks
+      include_tasks: tasks/user_management.yml
+
+    - name: Include disk setup tasks
+      include_tasks: tasks/disk_setup.yml
+
+    - name: Include FTP configuration tasks
+      include_tasks: tasks/ftp_config.yml
+
+    - name: Include firewall configuration tasks
+      include_tasks: tasks/firewall.yml

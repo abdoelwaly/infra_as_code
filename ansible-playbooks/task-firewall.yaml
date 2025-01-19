@@ -1,0 +1,27 @@
+---
+- name: Configure firewalld for FTP
+  firewalld:
+    service: ftp
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Configure firewalld for FTPS
+  firewalld:
+    service: ftps
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Add passive port range to firewall
+  firewalld:
+    port: "{{ pasv_min_port }}-{{ pasv_max_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Ensure firewalld is running
+  service:
+    name: firewalld
+    state: started
+    enabled: yes

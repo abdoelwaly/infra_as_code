@@ -1,0 +1,42 @@
+---
+- name: Configure vsftpd
+  template:
+    src: templates/vsftpd.conf.j2
+    dest: /etc/vsftpd/vsftpd.conf
+    mode: '0600'
+  notify: Restart vsftpd
+
+- name: Create SSL directory
+  file:
+    path: /etc/vsftpd/ssl
+    state: directory
+    mode: '0700'
+
+- name: Install SSL certificate
+  copy:
+    content: "{{ ssl_certificate }}"
+    dest: /etc/vsftpd/ssl/vsftpd.crt
+    mode: '0600'
+  notify: Restart vsftpd
+
+- name: Install SSL key
+  copy:
+    content: "{{ ssl_certificate_key }}"
+    dest: /etc/vsftpd/ssl/vsftpd.key
+    mode: '0600'
+  notify: Restart vsftpd
+
+- name: Configure SELinux for FTP
+  seboolean:
+    name: "{{ item }}"
+    state: yes
+    persistent: yes
+  loop:
+    - ftp_home_dir
+    - ftpd_full_access
+
+- name: Enable and start vsftpd service
+  service:
+    name: vsftpd
+    state: started
+    enabled: yes

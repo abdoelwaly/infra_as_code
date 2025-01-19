@@ -1,0 +1,17 @@
+---
+- name: Install required packages
+  dnf:
+    name: 
+      - vsftpd
+      - firewalld
+      - policycoreutils-python-utils
+      - python3-pip
+      - openssl
+    state: present
+
+- name: Install Python packages for FTP monitoring
+  pip:
+    name:
+      - pyftpdlib
+      - psutil
+    state: present

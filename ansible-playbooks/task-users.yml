@@ -1,0 +1,27 @@
+---
+- name: Create FTP admin group
+  group:
+    name: ftpadmin
+    state: present
+
+- name: Create ftpadmin user
+  user:
+    name: "{{ ftp_admin_user }}"
+    group: ftpadmin
+    password: "{{ ftp_admin_password | password_hash('sha512') }}"
+    shell: /bin/bash
+    create_home: yes
+    state: present
+
+- name: Set up SSH authorized keys for ftpadmin
+  authorized_key:
+    user: "{{ ftp_admin_user }}"
+    key: "{{ lookup('file', 'files/ftpadmin.pub') }}"
+    state: present
+  when: lookup('file', 'files/ftpadmin.pub', errors='ignore')
+
+- name: Create FTP users list file
+  template:
+    src: templates/vsftpd.userlist.j2
+    dest: /etc/vsftpd/user_list
+    mode: '0600'
