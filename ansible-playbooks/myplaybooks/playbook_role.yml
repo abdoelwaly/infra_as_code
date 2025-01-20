@@ -1,0 +1,27 @@
+- name: Playbook
+  hosts: all
+  gather_facts: yes
+  vars_files:
+    - secret.yml
+  roles:
+    - webadmin
+
+  pre_tasks:
+    - name: Shell Script 
+      shell: echo "Automated Script Started!"
+
+    - name: Add New user
+      user:
+        name: webadmin
+        state: present
+        groups: wheel
+        password: "{{ PASS | password_hash('sha512') }}"
+
+    - name: checK os
+      fail:
+        msg: "NOT A REDHAT SW"
+      when: ansible_facts.os_family != "RedHat"
+
+
+
+

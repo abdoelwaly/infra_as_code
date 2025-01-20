@@ -1,0 +1,15 @@
+---                                                           
+- name: Backing up configuration files  
+  hosts: web                                                
+    #become: true                                                
+  gather_facts: false                                         
+                                                              
+  tasks:                                                      
+    - include_role:                                           
+        name: gls.utils.backup                               
+      vars:                                                  
+        backup_id: etc_bk                                      
+        backup_files:                                        
+          - /etc/hosts
+          - /etc/fstab
+

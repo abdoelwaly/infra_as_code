@@ -1,0 +1,127 @@
+- name: Playbook
+  hosts: all
+  gather_facts: yes
+  vars:
+    SW:
+      - httpd
+      - vsftpd
+      - ftp
+    SRV:
+      - httpd
+      - vsftpd
+    PORTS:
+      - http
+      - https
+  vars_files:
+    - secret.yml
+  tasks:
+    - name: Shell Script 
+      shell: echo "Automated Script Started!"
+
+    - name: Add New user
+      user:
+        name: webadmin
+        state: present
+        groups: wheel
+        password: "{{ PASS | password_hash('sha512') }}"
+
+    - name: checK os
+      fail:
+        msg: "NOT A REDHAT SW"
+      when: ansible_facts.os_family != "RedHat"
+
+    - name: Install the latest version of Apache
+      block:
+      - name: start block
+        dnf:
+           name: "{{ SW }}"
+           state: latest
+        when: ansible_facts.os_family == "RedHat"
+        notify: Copyfiles
+
+      - name: chage to 8080
+        lineinfile:
+          path: /etc/httpd/conf/httpd.conf
+          regexp: "^Listen"
+          line: "Listen 8080"
+        notify: restart srv
+
+      - name: Activate the httpd service
+        service:
+          name: "{{ item }}"
+          state: started
+          enabled: true
+        loop: "{{ SRV }}"
+
+
+      - name: Open the firewall port 80 to allow the traffic
+        firewalld:
+          service: "{{ item }}"
+          state: enabled
+          permanent: true
+          immediate: true
+        loop: "{{ PORTS }}"
+
+      rescue:
+      - name: Tb sw
+        dnf:
+          name: vftpd
+          state: present
+
+      - name: Tb enable
+        service:
+          name: vsftpd
+          state: started
+          enabled: yes
+
+      - name: TB
+        firewalld:
+          service: ftp
+          state: enabled
+          permanent: yes
+          immediate: yes
+
+      always:
+      - name: all time tasks
+        fetch:
+          src: /etc/passwd
+          dest: bkusers
+          flat: no
+
+      - name: deny at
+        lineinfile:
+          path: /etc/at.deny
+          line: "student"
+          state: absent
+
+      - name:
+        template:
+          src: motd.j2
+          dest: /etc/motd
+
+
+
+  handlers:
+    - name: hello
+      file:
+        path: /tmp/hello
+        state: touch
+
+    - name: restart srv
+      service:
+        name: httpd
+        state: restarted      
+
+    - name: Copyfiles
+      block:
+      - name: touch
+        file:
+          path: /var/www/html/index.html
+          state: touch
+
+      - name: sent contaent
+        copy:
+          content: 'MY HAPPY CODE '
+          dest: /var/www/html/index.html
+
+

@@ -1,0 +1,15 @@
+---
+- name: Restoring configuration files and the home directory o
+  hosts: serverb
+    #  become: true
+  gather_facts: false
+                                                              
+  tasks:
+    - name: test net
+      gls.utils.newping:
+        data: pong
+
+    - include_role:                                          
+        name: gls.utils.restore                              
+      vars:                                                  
+        backup_id: etc_bk                         

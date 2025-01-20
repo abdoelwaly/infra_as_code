@@ -1,0 +1,16 @@
+172.25.250.9
+
+[web]
+servera
+serverb
+
+[db]
+serverc
+serverd
+
+[ws]
+workstation
+
+[nti:children]
+web
+db

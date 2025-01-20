@@ -1,0 +1,24 @@
+---
+# handlers file for webadmin
+    - name: hello
+      file:
+        path: /tmp/hello
+        state: touch
+
+    - name: restart srv
+      service:
+        name: httpd
+        state: restarted
+
+    - name: Copyfiles
+      block:
+      - name: touch
+        file:
+          path: /var/www/html/index.html
+          state: touch
+
+      - name: sent contaent
+        copy:
+          content: 'MY HAPPY CODE '
+          dest: /var/www/html/index.html
+

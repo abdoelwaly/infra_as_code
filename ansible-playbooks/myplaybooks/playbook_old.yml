@@ -1,0 +1,33 @@
+---
+- name: myplay1
+  hosts: web
+  tasks:
+    # - name: T1
+    # user:
+    #   name: webadmin
+    #   state: present
+    #   password: "{{ 'nti' | password_hash('sha512') }} "
+
+	
+    - name: T2
+      dnf:
+        name: httpd
+        state: present
+
+    - name: T3
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+
+    - name: T4 upload web site
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+
+    - name: T5 open port80
+      firewalld:
+        service: http
+        state: enabled
+        permanent: yes
+        immediate: yes      
