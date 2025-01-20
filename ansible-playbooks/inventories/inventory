@@ -11,6 +11,6 @@ serverd
 [ws]
 workstation
 
-[nti:children]
+[all:children]
 web
 db
