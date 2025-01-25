@@ -1,0 +1,74 @@
+- name: ftpd play
+  hosts: ftp
+  roles:
+    - name: redhat.rhel_system_roles.storage
+      storage_pools:
+        - name: ftpgroup
+          disks:
+            - vdb
+          volumes:
+            - name: ftppub
+              size: "500 MiB"
+              mount_point: "/var/ftp/"
+              fs_type: xfs
+              state: present
+
+
+  post_tasks:
+    - name: install vsftpd
+      dnf:
+        name: vsftpd
+        state: present
+
+    - name: sample file
+      file:
+        state: touch
+        path: /var/ftp/pub/sample.iso
+
+    - name: enable anonymous
+      lineinfile:
+        path: /etc/vsftpd/vsftpd.conf
+        regexp: "^anonymous_enable"
+        line: "anonymous_enable=YES"
+
+    - name: enable ftp service
+      service:
+        name: vsftpd
+        state: started
+        enabled: yes
+
+
+    - name: open f/w
+      firewalld:
+        service: ftp
+        state: enabled
+        permanent: yes
+        immediate: yes
+
+    - name: add user 
+      user:
+        name: ftpadmin
+        state: present
+        password: "{{ 'mypass' | password_hash('sha512')  }}"
+
+    - name: chown for ftp pub folder
+      file:
+        path: /var/ftp
+        owner: ftpadmin
+        recurse: yes
+
+ ####################################################################################         
+ 
+- name: play test downloads
+  hosts: ws
+  gather_facts: false
+  remote_user: student
+  tasks:
+    - name: get download
+      get_url:
+        url: ftp://serverb/pub/sample.iso
+        dest: /tmp/sample.iso
+
+    - name: show ftp status
+      debug:
+        msg: "ftp running Welllllll"
