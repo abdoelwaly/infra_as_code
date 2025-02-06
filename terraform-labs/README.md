@@ -14,7 +14,7 @@ This repository contains three Terraform projects:
 
 ### 1️⃣ Project 1: Foundational Infrastructure 🧱
 
-![Diagram](https://github.com/ibrahim-reda-2001/photo/blob/master/WhatsApp%20Image%202025-02-02%20at%2011.45.57_50fea60a.jpg)
+![Diagram](https://github.com/abdoelwaly/infra_as_code/blob/4c54dc23c2c7e48a6562e603c6748015ad52de81/terraform-labs/architectures/lab-arch.jpg)
 
 This project lays the foundation for the AWS environment, including:
 
@@ -40,7 +40,7 @@ Building upon Project 1, this project deploys a scalable web application:
 
 ### 3️⃣ Project 3: Reverse Proxy Architecture 🔄
 
-![Diagram](https://github.com/ibrahim-reda-2001/photo/blob/master/Lab3%5B1%5D.pdf%20and%202%20more%20pages%20-%20Profile%201%20-%20Microsoft%E2%80%8B%20Edge%202_6_2025%204_32_05%20PM.png)
+![Diagram](https://github.com/abdoelwaly/infra_as_code/blob/4c54dc23c2c7e48a6562e603c6748015ad52de81/terraform-labs/architectures/lab3-architecture.png)
 
 This project implements a reverse proxy using AWS services:
 
